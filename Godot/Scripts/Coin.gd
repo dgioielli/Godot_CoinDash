@@ -1,5 +1,9 @@
 extends Area2D
 
+## Variáveis
+
+var screensize
+
 ## Funções do sistema
 
 func _ready():
