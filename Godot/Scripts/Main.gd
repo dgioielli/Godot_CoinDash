@@ -23,6 +23,8 @@ func _process(delta):
 	if (playing and $CoinContainer.get_child_count() == 0):
 		level += 1
 		time_left += 5
+		$HUD.update_timer(time_left)
+		$LevelSound.play()
 		spawn_coins()
 
 ## Funções de eventos
@@ -37,6 +39,7 @@ func _on_GameTimer_timeout():
 func _on_Player_pickup():
 	score += 1
 	$HUD.update_score(score)
+	$CoinSound.play()
 	pass # Replace with function body.
 
 func _on_Player_hurt():
@@ -69,6 +72,7 @@ func spawn_coins():
 func game_over():
 	playing = false
 	$GameTimer.stop()
+	$EndSound.play()
 	for coin in $CoinContainer.get_children():
 		coin.queue_free()
 		$HUD.show_game_over()
