@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://Sprites/grass.jpg" type="Texture" id=1]
+[ext_resource path="res://Sprites/grass.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=2]
 [ext_resource path="res://PreFabs/Coin.tscn" type="PackedScene" id=3]
 [ext_resource path="res://PreFabs/Player.tscn" type="PackedScene" id=4]
@@ -8,15 +8,21 @@
 [ext_resource path="res://Audio/Level.wav" type="AudioStream" id=6]
 [ext_resource path="res://Audio/Coin.wav" type="AudioStream" id=7]
 [ext_resource path="res://Audio/Powerup.wav" type="AudioStream" id=8]
+[ext_resource path="res://Audio/Hit.wav" type="AudioStream" id=9]
+[ext_resource path="res://PreFabs/Powerup.tscn" type="PackedScene" id=10]
+[ext_resource path="res://PreFabs/Cactus.tscn" type="PackedScene" id=11]
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 2 )
 Coin = ExtResource( 3 )
+Powerup = ExtResource( 10 )
 play_time = 30
 
 [node name="Background" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = 720.0
+margin_bottom = 480.0
 texture = ExtResource( 1 )
 stretch_mode = 2
 __meta__ = {
@@ -26,6 +32,9 @@ __meta__ = {
 [node name="Player" parent="." instance=ExtResource( 4 )]
 
 [node name="CoinContainer" type="Node" parent="."]
+
+[node name="Cactus" parent="." instance=ExtResource( 11 )]
+position = Vector2( 457.068, 148.889 )
 
 [node name="PlayerStart" type="Position2D" parent="."]
 position = Vector2( 240, 350 )
@@ -41,8 +50,15 @@ stream = ExtResource( 7 )
 stream = ExtResource( 6 )
 
 [node name="EndSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+
+[node name="PowerSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
+
+[node name="PowerupTimer" type="Timer" parent="."]
+one_shot = true
 [connection signal="hurt" from="Player" to="." method="_on_Player_hurt"]
 [connection signal="pickup" from="Player" to="." method="_on_Player_pickup"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_GameTimer_timeout"]
 [connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="timeout" from="PowerupTimer" to="." method="_on_PowerupTimer_timeout"]

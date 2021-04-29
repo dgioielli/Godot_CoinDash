@@ -3,6 +3,7 @@ extends Node2D
 ## Variáveis
 
 export (PackedScene) var Coin
+export (PackedScene) var Powerup
 export (int) var play_time
 
 var level
@@ -26,6 +27,8 @@ func _process(delta):
 		$HUD.update_timer(time_left)
 		$LevelSound.play()
 		spawn_coins()
+		$PowerupTimer.wait_time = rand_range(5, 10)
+		$PowerupTimer.start()
 
 ## Funções de eventos
 
@@ -36,16 +39,28 @@ func _on_GameTimer_timeout():
 		game_over()
 	pass # Replace with function body.
 
-func _on_Player_pickup():
-	score += 1
-	$HUD.update_score(score)
-	$CoinSound.play()
+func _on_Player_pickup(type):
+	match (type):
+		"coin":
+			score += 1
+			$HUD.update_score(score)
+			$CoinSound.play()
+		"powerup":
+			time_left += 5
+			$PowerSound.play()
+			$HUD.update_timer(time_left)
 	pass # Replace with function body.
 
 func _on_Player_hurt():
 	game_over()
 	pass # Replace with function body.
 
+func _on_PowerupTimer_timeout():
+	var p = Powerup.instance()
+	add_child(p)
+	p.screensize = screensize
+	p.position = Vector2(rand_range(0, screensize.x), rand_range(0, screensize.y))
+	pass # Replace with function body.
 
 
 ## Funções da classe
@@ -78,6 +93,9 @@ func game_over():
 		$HUD.show_game_over()
 		$Player.die()
 	pass
+
+
+
 
 
 

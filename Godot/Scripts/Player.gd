@@ -13,6 +13,7 @@ const HURT = "hurt"
 
 const GROUP_COINS = "coins"
 const GROUP_OBSTACLES = "obstacles"
+const GROUP_POWER = "powerups"
 
 ## Variáveis
 
@@ -45,10 +46,13 @@ func _process(delta):
 func _on_Player_area_entered(area):
 	if (area.is_in_group(GROUP_COINS)):
 		area.pickup()
-		emit_signal("pickup")
+		emit_signal("pickup", "coin")
 	elif (area.is_in_group(GROUP_OBSTACLES)):
 		emit_signal("hurt")
 		die()
+	elif (area.is_in_group(GROUP_POWER)):
+		area.pickup()
+		emit_signal("pickup", "powerup")
 	pass # Replace with function body.
 
 ## Funções internas da classe:
